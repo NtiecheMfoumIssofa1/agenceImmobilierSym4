@@ -1,24 +1,43 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    # on ajoute ce bloc dans la partie providers pour l'authentification en mémoire
+    #in_memory:
+     #   memory:
+      #      users:
+       #         demo:
+        #            password: demo
+         #           roles: ROLE_ADMIN
     providers:
-        in_memory: { memory: ~ }
+        from_database:
+            entity:
+                class: App\Entity\User
+                property: username
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            logout:
+                path: /logout
+                target: /
 
             # activate different ways to authenticate
-
+# http_basic: true utilisé quand on utilise l'authentification dans la memoire
             # http_basic: true
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: true
+# form_login: true active le formulaire de login et on ajoute ckeck_login:login pour qu'il affiche les erreurs possibles a la bd
+            form_login:
+                check_path: login
             # https://symfony.com/doc/current/security/form_login_setup.html
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+    # App\Entity\User: plaintext test pour les user
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
