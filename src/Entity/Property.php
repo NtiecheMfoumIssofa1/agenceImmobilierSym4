@@ -4,12 +4,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+#use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; #ajouté pour la validation
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
+ * @UniqueEntity("title")
  */
 class Property
 {
+    #@UniqueEntity rend une nouvelle
     #declaration de la constante pour la propriété chauffage
     const HEAT = [
       0 => 'Electrique',
@@ -24,6 +29,7 @@ class Property
     private $id;
 
     /**
+     * @Assert\Length(min=5,max=255)
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -32,6 +38,7 @@ class Property
     
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Range(min=10, max=400)
      */
     private $surface;
 
@@ -71,6 +78,7 @@ class Property
     private $address;
 
     /**
+     * @Assert\Regex("/^[0-9]{5}$/")
      * @ORM\Column(type="string", length=255)
      */
     private $postal_code;
@@ -98,6 +106,22 @@ class Property
     {
         $this->created_at = new \DateTime();
     }
+
+    #cette fonction est ajouté pour le csrf
+    #public function configureOptions(OptionsResolver $resolver)
+    #{
+     #   $resolver->setDefaults([
+      #      'data_class'      => Property::class,
+       #     // enable/disable CSRF protection for this form
+        #    'csrf_protection' => true,
+         #   // the name of the hidden HTML field that stores the token
+          #  'csrf_field_name' => '_token',
+           # // an arbitrary string used to generate the value of the token
+            #// using a different string for each form improves its security
+            #'csrf_token_id'   => 'id',
+        #]);
+    #}
+
 
     public function getId(): ?int
     {
