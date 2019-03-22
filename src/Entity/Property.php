@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Cocur\Slugify\Slugify;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
@@ -11,8 +11,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
 class Property
 {
     #declaration de la constante pour la propriété chauffage
-    const HEAD = [
-      0 => 'electric',
+    const HEAT = [
+      0 => 'Electrique',
       1 => 'gaz',
       2 => 'bois'
     ];
@@ -27,6 +27,8 @@ class Property
      * @ORM\Column(type="string", length=255)
      */
     private $title;
+
+   
     
     /**
      * @ORM\Column(type="integer")
@@ -73,6 +75,8 @@ class Property
      */
     private $postal_code;
 
+
+
     /**
      * @ORM\Column(type="boolean",options={"default": false})
      */
@@ -82,6 +86,11 @@ class Property
      * @ORM\Column(type="datetime")
      */
     private $created_at;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     #création d'un constructeur avec paramètre et initialisation de la date
 
@@ -107,17 +116,13 @@ class Property
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
+    #ajout de slugify pour la convertion des chaines de caractère
+
+    public function getSlug(): string {
+        return (new Slugify())->slugify($this->title);
     }
 
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
 
-        return $this;
-    }
 
     public function getSurface(): ?int
     {
@@ -178,7 +183,11 @@ class Property
 
         return $this;
     }
-
+#une fonction qui se charge de formater le prix
+    public function getFormattedPrice(): string
+    {
+       return number_format($this->price, 0,'',' ');
+    }
     public function getHeat(): ?int
     {
         return $this->heat;
@@ -189,6 +198,12 @@ class Property
         $this->heat = $heat;
 
         return $this;
+    }
+
+    #renvoi une chaine de caractère correspondante au numero de chauffage
+    public function  getHeatType() :string
+    {
+        return self::HEAT[$this->heat];
     }
 
     public function getCity(): ?string
@@ -247,6 +262,18 @@ class Property
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

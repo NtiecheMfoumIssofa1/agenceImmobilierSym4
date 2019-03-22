@@ -7,4 +7,22 @@
         <h1>Agence Tiefa</h1>
         <p>Il existe peu de travaux sur les agents immobiliers. Cela vaut également pour des professions proches comme les administrateurs de biens (appelés régies à Lyon) ou les marchands de biens.</p>
     </div>
+    <div class="container">
+        <h2>Les Derniers biens</h2>
+        <div class="row flex">
+            {% for property in properties %}
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('property.show', {id: property.id, slug: property.slug}) }}">{{ property.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ property.city }} ({{ property.postalCode }})</p>
+                            <div class="text-primary" style="font-weight: bold; font-size: 2rem;">{{ property.formattedPrice }} FCFA</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

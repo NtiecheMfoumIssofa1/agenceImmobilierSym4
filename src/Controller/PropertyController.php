@@ -38,6 +38,10 @@ class PropertyController extends AbstractController {
     #recupere la données enrégistrée 1ere methode
     # $repository = $this->getDoctrine()->getRepository(Property::class); #instanciation du repository
     #dump($repository); #voir ce que ça retourne
+    #$property = $this->repository->findAllVisible();
+    #dump($property); affiche sous le terminal la variable
+    # $property[0]->setSold(false); modifie la valeur du solde avant ajout
+    #$this->em->flush();#permet de faire la mise à jour
 #-->
 
     #recupere la données enrégistrée 2eme methode
@@ -57,12 +61,34 @@ class PropertyController extends AbstractController {
      */
     public function index(): Response
     {
-       $property = $this->repository->findAllVisible();
-       #dump($property);
-       # $property[0]->setSold(false);
-       $this->em->flush();#permet de faire la mise à jour
         return $this->render('property/index.html.twig',[
             'current_menu' => 'properties'
+        ]);
+    }
+    # 'property' => $property, envoie du proprité à la vue
+    # statut 301 redirection instantanée
+    #$slug, $id utiliser premierement en paramètre pour retourner une page
+    #$property = $this->repository->find($id); dans la même idée ajouter cette ligne
+    #requirements indique à quoi doivent ressembler les differentes paramètres
+    /**
+     * @Route("/biens/{slug}-{id}", name="property.show", requirements={"slug": "[a-z0-9\-]*"})
+     * @param Property $property
+     * @return Response
+     */
+    public function show(Property $property, string $slug): Response
+    {
+        #verifie si le slug fonctionne
+        if ($property->getSlug() !== $slug){
+            #si ce n'est pas egale redirection vers une route
+            #cet bloc de code est très important pour le référencement des url
+           return  $this->redirectToRoute('property.show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ],301);
+        }
+        return $this->render('property/show.html.twig',[
+            'property' => $property,
+            'current_menu'  => 'properties'
         ]);
     }
 }
