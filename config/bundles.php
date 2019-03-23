@@ -15,4 +15,6 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
+    Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
 ];
+# Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all'] cette ligne est ajouter automatiquement sur symfony 4 lorsqu'on fais: composer require knplabs/knp-paginator-bundle
