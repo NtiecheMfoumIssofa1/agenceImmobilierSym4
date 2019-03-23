@@ -39,6 +39,16 @@ class PropertyRepository extends ServiceEntityRepository
                 ->andWhere('p.surface >= :minsurface')
                 ->setParameter('minsurface', $search->getMinSurface());
         }
+        #verification champ option $k = 0; cette initialisation permet d'éviter d'entrer du n'importe quoi dans l'url du site
+        if ($search->getOptions()->count() > 0){
+            $k = 0;
+            foreach ($search->getOptions() as $option){
+                $k++;
+                $query = $query
+                    ->andWhere(":option$k MEMBER OF p.options")
+                    ->setParameter("option$k", $option);
+            }
+        }
                return $query ->getQuery();
 
 

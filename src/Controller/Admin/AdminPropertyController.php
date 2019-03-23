@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Option;
 use App\Entity\Property;
 use App\Form\PropertyType;
 use App\Repository\PropertyRepository;
@@ -74,6 +75,11 @@ class  AdminPropertyController extends  AbstractController{
      */
     public function edit(Property $property, Request $request)
     {
+        ##ajout des options afin de sauvegarder les option dans la bd et en respectant la relation
+           # $option = new Option();
+            #$property->addOption($option);
+        ##fin ajout des fonctions
+
         #ajouter la ligne suivante lorqu'on travail avec le formulaire comme vue
         #on n'envoi pas le form ($form) mais plutot la methode create view de $form
         $form = $this->createForm(PropertyType::class, $property);
