@@ -1,0 +1,14 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        property_image:
+            uri_prefix: /images/properties
+            upload_destination: '%kernel.project_dir%/public/images/properties'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+    #mappings:
+    #    products:
+    #        uri_prefix: /images/products dossier de l'image
+    #        upload_destination: '%kernel.project_dir%/public/images/products' lien de stockage de l'image
+    #namer permet d'ajouter une clé particulière à une image

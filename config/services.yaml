@@ -23,7 +23,6 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
@@ -33,3 +32,8 @@ services:
      #   tags: ['controller.service_arguments']
       #  arguments:
        #     $twig: '@twig'
+
+     #création du service listener sinon catte class ne sera pas chargé
+    App\Listener\ImageCacheSubscriber:
+        tags:
+        - {name: doctrine.event_subscriber}

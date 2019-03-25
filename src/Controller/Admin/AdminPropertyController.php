@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class  AdminPropertyController extends  AbstractController{
 
     #ObjectManager $em on ajout ceci au contruecteur lorsqu'on veut communiquer avec la bd
