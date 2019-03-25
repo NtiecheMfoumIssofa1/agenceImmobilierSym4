@@ -3,9 +3,12 @@
 #toujours commencer par mentionner le namespace
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Property;
 use App\Entity\PropertySearch;
+use App\Form\ContactType;
 use App\Form\PropertySearchType;
+use App\Notification\ContactNotification;
 use App\Repository\PropertyRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Knp\Component\Pager\PaginatorInterface;
@@ -95,8 +98,10 @@ class PropertyController extends AbstractController {
      * @param Property $property
      * @return Response
      */
-    public function show(Property $property, string $slug): Response
+    public function show(Property $property, string $slug,
+                       Request $request,ContactNotification $notification): Response
     {
+
         #verifie si le slug fonctionne
         if ($property->getSlug() !== $slug){
             #si ce n'est pas egale redirection vers une route
@@ -106,9 +111,29 @@ class PropertyController extends AbstractController {
                 'slug' => $property->getSlug()
             ],301);
         }
+
+        ## debut block contact
+        $contact = new Contact();
+        $contact->setProperty($property);
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+        #verification de la soumition et de la validation de l'email
+        if($form->isSubmitted() && $form->isValid()){
+            #notifier le client
+            $notification->notify($contact);
+            $this->addFlash('success','Votre email a bien été envoyé');
+            return  $this->redirectToRoute('property.show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ]);
+        }
+        ##fin block contact
+
         return $this->render('property/show.html.twig',[
-            'property' => $property,
-            'current_menu'  => 'properties'
+            'property'      => $property,
+            'current_menu'  => 'properties',
+            'form'          => $form->createView()
+
         ]);
     }
 }
